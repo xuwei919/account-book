@@ -194,13 +194,29 @@ export default {
       });
     },
     deleteRecord(row) {
-      payListApi.deleteById(row.id).then((res) => {
-        console.log("res", res);
-        this.$message({
-          type: "success",
-          message: "删除成功",
+      this.$confirm("确定删除记录吗?", "操作确认", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          payListApi.deleteById(row.id).then((res) => {
+            console.log("res", res);
+            if (res.code == 1) {
+              this.getPayList(this.currentPage, this.pageSize);
+              this.$message({
+                type: "success",
+                message: "删除成功",
+              });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
         });
-      });
     },
     editRecord(row) {
       this.dialogFormVisible = true;
