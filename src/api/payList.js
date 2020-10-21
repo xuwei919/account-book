@@ -21,10 +21,11 @@ export default {
         })
     },
 
-    editById(id) {
+    editById(formData) {
         return request({
-            url: `/${group_name}/editById?id=` + id,
-            method: 'post'
+            url: `/${group_name}/editById`,
+            method: 'post',
+            data: formData
         })
     }
 

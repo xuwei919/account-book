@@ -3,7 +3,10 @@ import { Message } from 'element-ui';
 
 const service = axios.create({
     baseURL: '/',
-    timeout: 5000
+    timeout: 5000,
+    headers: {
+        'Content-Type':'application/json;charset=UTF-8'
+    }
 })
 
 service.interceptors.request.use(

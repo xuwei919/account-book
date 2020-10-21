@@ -8,13 +8,7 @@
       show-summary
       :summary-method="getSummary"
     >
-      <el-table-column
-        prop="id"
-        label="id"
-        width="180"
-        v-if="false"
-        align="center"
-      ></el-table-column>
+      <el-table-column prop="id" label="id" width="180" v-if="false" align="center"></el-table-column>
       <el-table-column
         prop="payTime"
         label="支付时间"
@@ -22,12 +16,7 @@
         :formatter="dateFormat"
         align="center"
       ></el-table-column>
-      <el-table-column
-        prop="payType"
-        label="消费类型"
-        width="180"
-        align="center"
-      >
+      <el-table-column prop="payType" label="消费类型" width="180" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.payType == 0">菜</span>
           <span v-if="scope.row.payType == 1">水果</span>
@@ -41,27 +30,13 @@
           <span v-if="scope.row.payType == 9">其他</span>
         </template>
       </el-table-column>
-      <el-table-column prop="payName" label="消费人" align="center">
-      </el-table-column>
-      <el-table-column
-        prop="remark"
-        label="备注"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        prop="payAmount"
-        label="消费金额"
-        align="center"
-        sortable
-      ></el-table-column>
+      <el-table-column prop="payName" label="消费人" align="center"></el-table-column>
+      <el-table-column prop="remark" label="备注" align="center"></el-table-column>
+      <el-table-column prop="payAmount" label="消费金额" align="center" sortable></el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
-          <el-button @click="editRecord(scope.row)" type="text" size="small"
-            >编辑</el-button
-          >
-          <el-button type="text" size="small" @click="deleteRecord(scope.row)"
-            >删除</el-button
-          >
+          <el-button @click="editRecord(scope.row)" type="text" size="small">编辑</el-button>
+          <el-button type="text" size="small" @click="deleteRecord(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -82,46 +57,38 @@
     <el-dialog title="修改记录" :visible.sync="dialogFormVisible">
       <el-form :model="paymentDetail">
         <el-form-item label="支付时间" :label-width="formLabelWidth">
-          <el-input
+          <el-date-picker
             v-model="paymentDetail.payTime"
-            autocomplete="off"
-          ></el-input>
+            align="right"
+            type="date"
+            placeholder="选择支付时间"
+            :picker-options="pickerOptions"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="消费类型" :label-width="formLabelWidth">
-          <el-select
-            v-model="paymentDetail.payType"
-            placeholder="请选择消费类型"
-          >
-            <el-option label="菜" value="0"></el-option>
-            <el-option label="水果" value="1"></el-option>
-            <el-option label="零食" value="2"></el-option>
-            <el-option label="饮品" value="3"></el-option>
-            <el-option label="外卖" value="4"></el-option>
-            <el-option label="出行" value="5"></el-option>
-            <el-option label="服饰" value="6"></el-option>
-            <el-option label="化妆品" value="7"></el-option>
-            <el-option label="洗护" value="8"></el-option>
-            <el-option label="其他" value="9"></el-option>
+          <el-select v-model="paymentDetail.payType" placeholder="请选择消费类型">
+            <el-option label="菜" :value="0"></el-option>
+            <el-option label="水果" :value="1"></el-option>
+            <el-option label="零食" :value="2"></el-option>
+            <el-option label="饮品" :value="3"></el-option>
+            <el-option label="外卖" :value="4"></el-option>
+            <el-option label="出行" :value="5"></el-option>
+            <el-option label="服饰" :value="6"></el-option>
+            <el-option label="化妆品" :value="7"></el-option>
+            <el-option label="洗护" :value="8"></el-option>
+            <el-option label="其他" :value="9"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="备注" :label-width="formLabelWidth">
-          <el-input
-            v-model="paymentDetail.remark"
-            autocomplete="off"
-          ></el-input>
+          <el-input v-model="paymentDetail.remark" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="消费金额" :label-width="formLabelWidth">
-          <el-input
-            v-model="paymentDetail.payAmount"
-            autocomplete="off"
-          ></el-input>
+          <el-input v-model="paymentDetail.payAmount" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="saveEdit()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -168,12 +135,42 @@ export default {
       pageSize: 15,
       dialogFormVisible: false,
       paymentDetail: {
+        id: "",
         payTime: "",
         payType: "",
         remark: "",
         payAmount: "",
       },
       formLabelWidth: "300px",
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        },
+        shortcuts: [
+          {
+            text: "今天",
+            onClick(picker) {
+              picker.$emit("pick", new Date());
+            },
+          },
+          {
+            text: "昨天",
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24);
+              picker.$emit("pick", date);
+            },
+          },
+          {
+            text: "一周前",
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", date);
+            },
+          },
+        ],
+      },
     };
   },
   methods: {
@@ -220,11 +217,25 @@ export default {
     },
     editRecord(row) {
       this.dialogFormVisible = true;
-      console.log(row);
+      this.paymentDetail.id = row.id;
+      this.paymentDetail.payName = row.payName;
       this.paymentDetail.payTime = row.payTime;
       this.paymentDetail.payType = row.payType;
       this.paymentDetail.remark = row.remark;
       this.paymentDetail.payAmount = row.payAmount;
+    },
+    saveEdit(formName) {
+      let formData = JSON.stringify(this.paymentDetail);
+      payListApi.editById(formData).then((res) => {
+        if (res.code == 1) {
+           this.dialogFormVisible = false;
+          this.getPayList(this.currentPage, this.pageSize);
+          this.$message({
+            type: "success",
+            message: "修改成功",
+          });
+        }
+      });
     },
     dateFormat(row, column) {
       var t = new Date(row.payTime);
