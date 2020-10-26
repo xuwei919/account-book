@@ -8,7 +8,13 @@
       show-summary
       :summary-method="getSummary"
     >
-      <el-table-column prop="id" label="id" width="180" v-if="false" align="center"></el-table-column>
+      <el-table-column
+        prop="id"
+        label="id"
+        width="180"
+        v-if="false"
+        align="center"
+      ></el-table-column>
       <el-table-column
         prop="payTime"
         label="支付时间"
@@ -16,7 +22,12 @@
         :formatter="dateFormat"
         align="center"
       ></el-table-column>
-      <el-table-column prop="payType" label="消费类型" width="180" align="center">
+      <el-table-column
+        prop="payType"
+        label="消费类型"
+        width="180"
+        align="center"
+      >
         <template slot-scope="scope">
           <span v-if="scope.row.payType == 0">菜</span>
           <span v-if="scope.row.payType == 1">水果</span>
@@ -30,13 +41,30 @@
           <span v-if="scope.row.payType == 9">其他</span>
         </template>
       </el-table-column>
-      <el-table-column prop="payName" label="消费人" align="center"></el-table-column>
-      <el-table-column prop="remark" label="备注" align="center"></el-table-column>
-      <el-table-column prop="payAmount" label="消费金额" align="center" sortable></el-table-column>
+      <el-table-column
+        prop="payName"
+        label="消费人"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="remark"
+        label="备注"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="payAmount"
+        label="消费金额"
+        align="center"
+        sortable
+      ></el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
-          <el-button @click="editRecord(scope.row)" type="text" size="small">编辑</el-button>
-          <el-button type="text" size="small" @click="deleteRecord(scope.row)">删除</el-button>
+          <el-button @click="editRecord(scope.row)" type="text" size="small"
+            >编辑</el-button
+          >
+          <el-button type="text" size="small" @click="deleteRecord(scope.row)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -46,7 +74,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
-        :page-sizes="[15, 20, 30, 50]"
+        :page-sizes="[5, 10, 15, 20]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
@@ -66,7 +94,10 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="消费类型" :label-width="formLabelWidth">
-          <el-select v-model="paymentDetail.payType" placeholder="请选择消费类型">
+          <el-select
+            v-model="paymentDetail.payType"
+            placeholder="请选择消费类型"
+          >
             <el-option label="菜" :value="0"></el-option>
             <el-option label="水果" :value="1"></el-option>
             <el-option label="零食" :value="2"></el-option>
@@ -80,10 +111,16 @@
           </el-select>
         </el-form-item>
         <el-form-item label="备注" :label-width="formLabelWidth">
-          <el-input v-model="paymentDetail.remark" autocomplete="off"></el-input>
+          <el-input
+            v-model="paymentDetail.remark"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
         <el-form-item label="消费金额" :label-width="formLabelWidth">
-          <el-input v-model="paymentDetail.payAmount" autocomplete="off"></el-input>
+          <el-input
+            v-model="paymentDetail.payAmount"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -132,7 +169,7 @@ export default {
       payList: [],
       total: 0,
       currentPage: 1,
-      pageSize: 15,
+      pageSize: 5,
       dialogFormVisible: false,
       paymentDetail: {
         id: "",
@@ -199,7 +236,7 @@ export default {
         .then(() => {
           payListApi.deleteById(row.id).then((res) => {
             console.log("res", res);
-            if (res.code == 1) {
+            if (res.code == 100) {
               this.getPayList(this.currentPage, this.pageSize);
               this.$message({
                 type: "success",
@@ -227,8 +264,9 @@ export default {
     saveEdit(formName) {
       let formData = JSON.stringify(this.paymentDetail);
       payListApi.editById(formData).then((res) => {
-        if (res.code == 1) {
-           this.dialogFormVisible = false;
+        console.log("res", res.code);
+        if (res.code == "100") {
+          this.dialogFormVisible = false;
           this.getPayList(this.currentPage, this.pageSize);
           this.$message({
             type: "success",
@@ -276,9 +314,13 @@ export default {
       return sums;
     },
     handleSizeChange(val) {
+      console.log("每页大小", val);
+      this.pageSize = val;
       this.getPayList(this.currentPage, val);
     },
     handleCurrentChange(val) {
+      console.log("选择页码", val);
+      this.currentPage = val;
       this.getPayList(val, this.pageSize);
     },
   },

@@ -5,7 +5,7 @@ const service = axios.create({
     baseURL: '/',
     timeout: 5000,
     headers: {
-        'Content-Type':'application/json;charset=UTF-8'
+        'Content-Type': 'application/json;charset=UTF-8'
     }
 })
 
@@ -31,15 +31,15 @@ service.interceptors.response.use(
     response => {
         const res = response.data
         console.log(res)
-        if (res.code === 1) {
+        if (res.code === 100) {
             return res
         } else {
-            //非200表示，接口异常
+            //非100表示，接口异常
             Message({
                 type: 'error',
-                message: res.message
+                message: res.msg
             })
-            return Promise.reject(res.message)
+            return Promise.reject(res.msg)
         }
     },
     error => {
