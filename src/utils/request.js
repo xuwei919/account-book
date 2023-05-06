@@ -16,7 +16,7 @@ service.interceptors.request.use(
         return config
     },
     error => {
-        //请求异常123
+        //请求异常123   369
         Message({
             type: 'error',
             message: '系统异常，请及时联系管理员'
