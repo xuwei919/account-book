@@ -44,7 +44,7 @@ service.interceptors.response.use(
     },
     error => {
         //http请求报错
-        // console.log('reason:' + error)
+        console.log('reason:' + error)
         Message({
             type: 'error',
             message: error
