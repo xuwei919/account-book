@@ -12,7 +12,7 @@ module.exports = {
         https: false,
         proxy: {
             '/': {
-                target: "http://localhost:8080",
+                target: "http://localhost:8899",
                 ws: false,
                 changeOrigin: true,
                 secure: false,
